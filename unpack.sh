@@ -21,7 +21,7 @@ if [ "$HTTP_CODE" != "200" ]; then
   exit 1
 fi
 
-echo "Extracting to current directory..."
+echo "Writing..."
 tar -xJf "$ARCHIVE"
 rm -f "$ARCHIVE"
 
