@@ -14,7 +14,7 @@ import (
 const (
 	partSize    = 10 * 1024 * 1024 // 10MB per part
 	maxParallel = 4
-	endpoint    = "https://serve.packageup.workers.dev/upload"
+	endpoint    = "https://api.packageup.io/upload"
 )
 
 type createResponse struct {

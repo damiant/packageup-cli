@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-const endpoint = "https://serve.packageup.workers.dev/download"
+const endpoint = "https://api.packageup.io/download"
 
 func main() {
 	if len(os.Args) < 2 {
