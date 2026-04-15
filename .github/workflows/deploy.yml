@@ -1,0 +1,77 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  serve:
+    name: Deploy Worker
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: serve
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: serve/package-lock.json
+
+      - run: npm ci
+      - run: npm run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+  upload:
+    name: Build Upload CLI
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: upload
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          cache-dependency-path: upload/go.mod
+
+      - run: |
+          GOOS=linux   GOARCH=amd64 go build -o upload-linux-amd64 .
+          GOOS=darwin  GOARCH=amd64 go build -o upload-darwin-amd64 .
+          GOOS=darwin  GOARCH=arm64 go build -o upload-darwin-arm64 .
+          GOOS=windows GOARCH=amd64 go build -o upload-windows-amd64.exe .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: upload-cli
+          path: upload/upload-*
+
+  download:
+    name: Build Download CLI
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: download
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          cache-dependency-path: download/go.mod
+
+      - run: |
+          GOOS=linux   GOARCH=amd64 go build -o download-linux-amd64 .
+          GOOS=darwin  GOARCH=amd64 go build -o download-darwin-amd64 .
+          GOOS=darwin  GOARCH=arm64 go build -o download-darwin-arm64 .
+          GOOS=windows GOARCH=amd64 go build -o download-windows-amd64.exe .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: download-cli
+          path: download/download-*
