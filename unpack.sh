@@ -10,7 +10,7 @@ if [ -z "$1" ]; then
 fi
 
 FILENAME="$1"
-ARCHIVE="/tmp/packageup-$$.tar.xz"
+ARCHIVE="/tmp/packageup-$$.tar.bz2"
 
 echo "Downloading ${FILENAME}..."
 HTTP_CODE=$(curl -sSL -o "$ARCHIVE" -w "%{http_code}" "${API}?filename=${FILENAME}")
@@ -22,7 +22,7 @@ if [ "$HTTP_CODE" != "200" ]; then
 fi
 
 echo "Writing..."
-tar -xJf "$ARCHIVE"
+tar -xjf "$ARCHIVE"
 rm -f "$ARCHIVE"
 
 curl -sSL -X DELETE "${API}?filename=${FILENAME}" > /dev/null

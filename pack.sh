@@ -2,10 +2,10 @@
 set -e
 
 API="https://api.packageup.io/upload"
-ARCHIVE="/tmp/packageup-$$.tar.xz"
+ARCHIVE="/tmp/packageup-$$.tar.bz2"
 
 echo "Compressing..."
-tar -cJf "$ARCHIVE" -C . .
+tar -cjf "$ARCHIVE" -C . .
 
 echo "Uploading..."
 RESPONSE=$(curl -sSL -X POST -H "Content-Type: application/octet-stream" --data-binary "@${ARCHIVE}" "$API")
