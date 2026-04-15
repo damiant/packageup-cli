@@ -113,6 +113,14 @@ export default {
 			return new Response(object.body, { headers });
 		}
 
+		// Redirect to install script
+		if (pathname === '/install' && request.method === 'GET') {
+			return Response.redirect(
+				'https://raw.githubusercontent.com/damiant/packageup-cli/main/install.sh',
+				302
+			);
+		}
+
 		return new Response('Not Found', { status: 404 });
 	},
 } satisfies ExportedHandler<Env>;
