@@ -2,6 +2,56 @@
 
 File upload and download service backed by Cloudflare Workers and R2.
 
+## Quick Start
+
+### Pack
+
+Archive and upload the current directory in one command:
+
+```sh
+curl -sSL https://api.packageup.io/pack | bash
+```
+
+This creates a `.tar.xz` archive of the current directory, uploads it to R2 storage, and outputs:
+
+```
+a3x9k2 was created
+
+To unpack, run:
+  curl -sSL https://api.packageup.io/unpack | bash -s a3x9k2
+```
+
+The 6-character ID (`a3x9k2`) is randomly generated and uniquely identifies the uploaded archive. No tools need to be pre-installed beyond `curl` and `tar`.
+
+### Unpack
+
+Download and extract a previously packed archive into the current directory:
+
+```sh
+curl -sSL https://api.packageup.io/unpack | bash -s <id>
+```
+
+Replace `<id>` with the 6-character filename returned by the pack command. The archive is downloaded, extracted with `tar -xJvf`, and the temporary file is cleaned up automatically.
+
+```
+a3x9k2 was unpacked
+```
+
+## Install CLI Tools
+
+Install the `upload` and `download` CLI tools:
+
+```sh
+curl -sSL https://api.packageup.io/install | bash
+```
+
+Then use them directly:
+
+```sh
+upload myfile.tar.gz        # Upload a file, prints the assigned ID
+download a3x9k2 output.tar.gz  # Download a file by ID
+```
+
 ## Project Structure
 
 ```
@@ -57,6 +107,9 @@ npm run cf-typegen
 | `POST`   | `/upload`   | `?action=mpu-complete&filename=&uploadId=`      | Complete multipart upload  |
 | `DELETE` | `/upload`   | `?filename=&uploadId=`                          | Abort multipart upload     |
 | `GET`    | `/download` | `?filename=`                                    | Download a file            |
+| `GET`    | `/pack`     | —                                               | Serve pack script          |
+| `GET`    | `/unpack`   | —                                               | Serve unpack script        |
+| `GET`    | `/install`  | —                                               | Serve install script       |
 
 ## upload
 

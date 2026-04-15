@@ -113,6 +113,22 @@ export default {
 			return new Response(object.body, { headers });
 		}
 
+		// Serve unpack script (downloads and extracts to cwd)
+		if (pathname === '/unpack' && request.method === 'GET') {
+			return Response.redirect(
+				'https://raw.githubusercontent.com/damiant/packageup-cli/main/unpack.sh',
+				302
+			);
+		}
+
+		// Serve pack script (archives cwd and uploads)
+		if (pathname === '/pack' && request.method === 'GET') {
+			return Response.redirect(
+				'https://raw.githubusercontent.com/damiant/packageup-cli/main/pack.sh',
+				302
+			);
+		}
+
 		// Redirect to install script
 		if (pathname === '/install' && request.method === 'GET') {
 			return Response.redirect(

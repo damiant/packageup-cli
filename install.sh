@@ -28,24 +28,21 @@ if [ "$OS" = "unsupported" ] || [ "$ARCH" = "unsupported" ]; then
   exit 1
 fi
 
-# Get latest release tag
-LATEST=$(curl -sSL -H "Accept: application/vnd.github.v3+json" \
-  "https://api.github.com/repos/${REPO}/releases/latest" | \
-  grep '"tag_name"' | sed -E 's/.*"tag_name": *"([^"]+)".*/\1/')
+BASE="https://github.com/${REPO}/releases/latest/download"
 
-if [ -z "$LATEST" ]; then
-  echo "Error: could not determine latest release"
-  exit 1
-fi
-
-BASE="https://github.com/${REPO}/releases/download/${LATEST}"
-
-echo "Installing packageup tools ${LATEST} (${OS}/${ARCH})..."
+echo "Installing packageup tools (${OS}/${ARCH})..."
 
 for tool in upload download; do
   URL="${BASE}/${tool}-${OS}-${ARCH}"
   echo "  Downloading ${tool}..."
-  curl -sSL -o "/tmp/${tool}" "$URL"
+  HTTP_CODE=$(curl -sSL -o "/tmp/${tool}" -w "%{http_code}" "$URL")
+
+  if [ "$HTTP_CODE" != "200" ]; then
+    echo "Error: failed to download ${tool} (HTTP ${HTTP_CODE})"
+    echo "Make sure a release exists at https://github.com/${REPO}/releases"
+    exit 1
+  fi
+
   chmod +x "/tmp/${tool}"
 
   if [ -w "$INSTALL_DIR" ]; then
