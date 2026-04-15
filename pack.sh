@@ -4,7 +4,7 @@ set -e
 API="https://api.packageup.io/upload"
 ARCHIVE="/tmp/packageup-$$.tar.xz"
 
-tar -cJvf "$ARCHIVE" -C . .
+tar -cJf "$ARCHIVE" -C . .
 
 RESPONSE=$(curl -sSL -X POST -H "Content-Type: application/octet-stream" --data-binary "@${ARCHIVE}" "$API")
 rm -f "$ARCHIVE"

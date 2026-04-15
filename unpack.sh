@@ -22,7 +22,9 @@ if [ "$HTTP_CODE" != "200" ]; then
 fi
 
 echo "Extracting to current directory..."
-tar -xJvf "$ARCHIVE"
+tar -xJf "$ARCHIVE"
 rm -f "$ARCHIVE"
+
+curl -sSL -X DELETE "${API}?filename=${FILENAME}" > /dev/null
 
 echo "${FILENAME} was unpacked"

@@ -113,6 +113,16 @@ export default {
 			return new Response(object.body, { headers });
 		}
 
+		// Delete a file by filename
+		if (pathname === '/download' && request.method === 'DELETE') {
+			const filename = url.searchParams.get('filename');
+			if (!filename) {
+				return Response.json({ error: 'Missing filename' }, { status: 400 });
+			}
+			await env.BUCKET.delete(filename);
+			return new Response(null, { status: 204 });
+		}
+
 		// Serve unpack script (downloads and extracts to cwd)
 		if (pathname === '/unpack' && request.method === 'GET') {
 			return Response.redirect(
