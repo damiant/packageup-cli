@@ -37,20 +37,7 @@ Replace `<id>` with the 6-character filename returned by the pack command. The a
 a3x9k2 was unpacked
 ```
 
-## Install CLI Tools
-
-Install the `upload` and `download` CLI tools:
-
-```sh
-curl -sSL https://api.packageup.io/install | bash
-```
-
-Then use them directly:
-
-```sh
-upload myfile.tar.gz        # Upload a file, prints the assigned ID
-download a3x9k2 output.tar.gz  # Download a file by ID
-```
+After a file is downloaded it is removed from storage.
 
 ## Project Structure
 
