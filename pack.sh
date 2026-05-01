@@ -5,7 +5,7 @@ API="https://api.packageup.io/upload"
 ARCHIVE="/tmp/packageup-$$.tar.bz2"
 
 echo "Compressing..."
-tar -cjf "$ARCHIVE" -C . .
+tar -cjf "$ARCHIVE" --exclude=.git -C . .
 
 echo "Uploading..."
 RESPONSE=$(curl -sSL -X POST -H "Content-Type: application/octet-stream" --data-binary "@${ARCHIVE}" "$API")
